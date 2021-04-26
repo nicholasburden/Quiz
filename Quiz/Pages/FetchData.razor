@@ -1,0 +1,51 @@
+﻿@page "/quiz"
+
+@using Quiz.Data
+@inject IQuizGenerationService QuizGenerationService
+
+<h1>Quiz</h1>
+
+@if (quiz == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Question</th>
+                <th>Choice1</th>
+                <th>Choice2</th>
+                <th>Choice3</th>
+                <th>Choice4</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var q in quiz.Questions)
+            {
+            <tr>
+                <td>@q.Text</td>
+                <td>@q.Choices[0]</td>
+                <td>@q.Choices[1]</td>
+                <td>@q.Choices[2]</td>
+                <td>@q.Choices[3]</td>
+            </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private Models.Quiz quiz;
+
+    protected override async Task OnInitializedAsync()
+    {
+        quiz = await QuizGenerationService.GetQuizAsync(new Models.QuizOptions
+        {
+            Category = (9, "A"),
+            NumQuestions = 10,
+            Difficulty = "easy"
+        });
+    }
+}
